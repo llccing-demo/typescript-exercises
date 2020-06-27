@@ -95,9 +95,26 @@ function logPerson(person: Person) {
     console.log(` - ${chalk.green(person.name)}, ${person.age}, ${additionalInformation}`);
 }
 
-function filterUsers(persons: Person[], criteria: User): User[] {
+// https://juejin.im/entry/5b55a152e51d4519503b3e77
+// 涉及 Omit 和 Partial 工具泛型
+// Omit 表示省略某些属性
+// Partial 表示将传入的属性变为可选项
+// interface Foo {
+//     name: string;
+//     age: number;
+//   }
+//   type B = Partial<Foo>;
+//   // 最多只能够定义 name, age 中的属性（可以不定义）
+//   let b: B = {
+//     name: '1',
+//     age: 3,
+//   };
+  
+type FilterUserCriteria = Partial<Omit<User, 'type'>>
+
+function filterUsers(persons: Person[], criteria: FilterUserCriteria): User[] {
     return persons.filter(isUser).filter((user) => {
-        let criteriaKeys = Object.keys(criteria) as (keyof User)[];
+        let criteriaKeys = Object.keys(criteria) as (keyof FilterUserCriteria)[];
         return criteriaKeys.every((fieldName) => {
             return user[fieldName] === criteria[fieldName];
         });
