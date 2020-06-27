@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import { type } from 'os';
 
 /*
 
@@ -88,7 +89,7 @@ const users: User[] = [
     }
 ];
 
-function swap(v1, v2) {
+function swap<K, T>(v1: K, v2: T): [T, K]{
     return [v2, v1];
 }
 
@@ -96,7 +97,7 @@ function test1() {
     console.log(chalk.yellow('test1:'));
     const [secondUser, firstAdmin] = swap(admins[0], users[1]);
     logUser(secondUser);
-    logAdmin(firstAdmin);
+    logAdmin(firstAdmin);   
 }
 
 function test2() {
