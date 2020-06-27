@@ -64,11 +64,23 @@ function logPerson(person: Person) {
     );
 }
 
-function filterPersons(persons: Person[], personType: string, criteria: unknown): unknown[] {
+// 泛型 Generics
+function getObjectKeys<O>(obj: O): (keyof O)[] {
+    return Object.keys(obj) as (keyof O)[];
+}
+
+// 工具泛型的使用；泛型 T
+type FilterCriteria<T> = Partial<Omit<T, 'type'>>;
+
+// 重载的使用
+function filterPersons(persons: Person[], personType: 'admin', criteria: FilterCriteria<Admin>): Admin[];
+function filterPersons(persons: Person[], personType: 'user', criteria: FilterCriteria<User>): User[];
+// 注意这里，'admin'|'user' 写法
+function filterPersons(persons: Person[], personType: 'admin'|'user', criteria: FilterCriteria<Person>): Person[] {
     return persons
         .filter((person) => person.type === personType)
         .filter((person) => {
-            let criteriaKeys = Object.keys(criteria) as (keyof Person)[];
+            let criteriaKeys = getObjectKeys(criteria)
             return criteriaKeys.every((fieldName) => {
                 return person[fieldName] === criteria[fieldName];
             });
